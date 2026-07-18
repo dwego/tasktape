@@ -1,4 +1,5 @@
 use tasktape::connection::Connection;
+use tasktape::viewer::Viewer;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -9,8 +10,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut updates = _connection.updates().await?;
 
+    let mut sequence = 0_u64;
+
     while let Some(update) = updates.message().await? {
-        println!("Update recebido: {update:#?}");
+        Viewer::print_update(sequence, &update);
+        sequence += 1;
     }
 
     Ok(())
